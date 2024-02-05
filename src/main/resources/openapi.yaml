@@ -1,0 +1,139 @@
+openapi: 3.0.0
+info:
+  license:
+    name: MIT
+  title: Open API Protobuf demo
+  version: 1.0.0
+servers:
+- url: http://localhost:8080/v1
+paths:
+  /employees:
+    get:
+      operationId: listEmployees
+      parameters:
+      - description: How many items to return at one time (max 100)
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          maximum: 100
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employees'
+          description: A paged array of employees
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              explode: false
+              schema:
+                type: string
+              style: simple
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+      summary: List all employees
+      tags:
+      - employees
+      x-accepts: application/json
+      x-tags:
+      - tag: employees
+    post:
+      operationId: createEmployee
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+        required: true
+      responses:
+        "201":
+          description: Null response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+      summary: Create an employee
+      tags:
+      - employees
+      x-content-type: application/json
+      x-accepts: application/json
+      x-tags:
+      - tag: employees
+  /employees/{employeeId}:
+    get:
+      operationId: showEmployeeById
+      parameters:
+      - description: The id of an employee to retrieve
+        explode: false
+        in: path
+        name: employeeId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+          description: Expected response to a valid request
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+      summary: Info for a specific employee
+      tags:
+      - employees
+      x-accepts: application/json
+      x-tags:
+      - tag: employees
+components:
+  schemas:
+    Employee:
+      example:
+        name: name
+        id: 0
+        tag: tag
+      properties:
+        id:
+          format: int64
+          type: integer
+        name:
+          type: string
+        tag:
+          type: string
+      required:
+      - id
+      - name
+      type: object
+    Employees:
+      items:
+        $ref: '#/components/schemas/Employee'
+      maxItems: 100
+      type: array
+    Error:
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+      required:
+      - code
+      - message
+      type: object
