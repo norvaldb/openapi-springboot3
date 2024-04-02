@@ -13,7 +13,12 @@ import org.springframework.context.annotation.FullyQualifiedAnnotationBeanNameGe
     nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class
 )
 @ComponentScan(
-    basePackages = {"com.demo.employees", "com.demo.employees.api" , "com.demo.employees.config"},
+    basePackages = {"com.demo.employees",
+            "com.demo.employees.api",
+            "com.demo.employees.config",
+            "com.demo.employees.facade",
+            "com.demo.employees.repository",
+            "com.demo.employees.domain"},
     nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class
 )
 public class OpenApiGeneratorApplication {
