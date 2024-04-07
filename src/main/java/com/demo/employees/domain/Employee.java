@@ -1,9 +1,6 @@
 package com.demo.employees.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -18,8 +15,9 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @Column(unique= true)
+    private String socialSecurityNumber;
     private String firstname;
     private String lastname;
-    private String birthdate;
 
 }

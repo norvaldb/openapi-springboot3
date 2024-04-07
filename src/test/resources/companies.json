@@ -1,0 +1,13 @@
+{
+  "company": {
+    "organisationNumber": "001002003",
+    "name": "Mitt Java",
+    "employees": [
+      {
+        "socialSecurityNumber": "01017010010",
+        "firstname": "Ola",
+        "lastname": "Nordmann"
+      }
+    ]
+  }
+}

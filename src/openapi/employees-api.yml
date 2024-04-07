@@ -46,21 +46,38 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /companies/{organisationNumber}:
+    get:
+      summary: Info for a specific company
+      operationId: getCompanyByOrganisationNumber
+      tags:
+        - companies
+      parameters:
+        - name: organisationNumber
+          in: path
+          required: true
+          description: The organisationNumber of a company to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyResponse"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /employees:
     get:
       summary: List all employees
       operationId: listEmployees
       tags:
         - employees
-      parameters:
-        - name: limit
-          in: query
-          description: How many items to return at one time (max 100)
-          required: false
-          schema:
-            type: integer
-            maximum: 100
-            format: int32
       responses:
         '200':
           description: A paged array of employees
@@ -99,17 +116,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /employees/{employeeId}:
+  /employees/{socialSecurityNumber}:
     get:
       summary: Info for a specific employee
-      operationId: showEmployeeById
+      operationId: getEmployeeBySocialSecurityNumber
       tags:
         - employees
       parameters:
-        - name: employeeId
+        - name: socialSecurityNumber
           in: path
           required: true
-          description: The id of an employee to retrieve
+          description: The socialSecurityNumber of an employee to retrieve
           schema:
             type: string
       responses:
@@ -135,7 +152,7 @@ components:
     EmployeeRequest:
       type: object
       properties:
-        company:
+        empolyee:
           $ref: "#/components/schemas/Employee"
     CompanyResponse:
       type: object
@@ -145,60 +162,55 @@ components:
     EmployeeResponse:
       type: object
       properties:
-        company:
+        employee:
           $ref: "#/components/schemas/Employee"
     CompaniesResponse:
       type: object
       properties:
-        company:
-          $ref: "#/components/schemas/Companies"
+        companies:
+          type: array
+          items:
+            $ref: "#/components/schemas/Company"
     EmployeesResponse:
       type: object
       properties:
-        company:
-          $ref: "#/components/schemas/Employees"
+        employees:
+          type: array
+          items:
+            $ref: "#/components/schemas/Employee"
     Company:
       type: object
       required:
         - name
+        - organisationNumber
       properties:
-        id:
-          type: integer
-          format: int64
+        organisationNumber:
+          type: string
         name:
           type: string
         employees:
-          $ref: "#/components/schemas/Employees"
+          type: array
+          items:
+            $ref: "#/components/schemas/Employee"
     Employee:
       type: object
       required:
         - firstname
         - lastname
         - birthdate
+        - socialSecurityNumber
       properties:
-        id:
-          type: integer
-          format: int64
+        socialSecurityNumber:
+          type: string
         firstname:
           type: string
         lastname:
           type: string
-        birthdate:
-          type: string
-    Companies:
-      type: array
-      items:
-        $ref: "#/components/schemas/Company"
-    Employees:
-      type: array
-      maxItems: 100
-      items:
-        $ref: "#/components/schemas/Employee"
     Error:
       type: object
       required:
-        - code
-        - message
+        - status
+        - title
       properties:
         status:
           type: integer

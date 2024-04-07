@@ -3,10 +3,9 @@ package com.demo.employees.api;
 
 import com.demo.employees.facade.CompanyFacade;
 import com.demo.employees.model.CompaniesResponse;
-import com.demo.employees.model.Company;
 import com.demo.employees.model.CompanyRequest;
+import com.demo.employees.model.CompanyResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +20,17 @@ public class CompaniesApiService implements CompaniesApiDelegate {
 
     @Override
     public ResponseEntity<Void> createCompany(CompanyRequest companyRequest) {
-        Company company = companyFacade.createCompany(companyRequest.getCompany().orElseThrow());
-        return new ResponseEntity<>(HttpStatus.OK);
+        companyFacade.createCompany(companyRequest.getCompany().orElseThrow());
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<CompanyResponse> getCompanyByOrganisationNumber(String organisationNumber) {
+        return new ResponseEntity<>(new CompanyResponse().company(companyFacade.getCompany(organisationNumber)), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<CompaniesResponse> listCompanies() {
-        return new ResponseEntity<>(new CompaniesResponse().company(companyFacade.getCompanyList()),HttpStatus.OK);
+        return new ResponseEntity<>(new CompaniesResponse().companies(companyFacade.getCompanyList()), HttpStatus.OK);
     }
 }

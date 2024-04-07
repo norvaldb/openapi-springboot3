@@ -1,10 +1,9 @@
 package com.demo.employees.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -18,6 +17,11 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @Column(unique = true)
+    private String organisationNumber;
     private String name;
+
+    @OneToMany
+    private List<Employee> employees;
 
 }
